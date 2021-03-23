@@ -4,6 +4,7 @@
 
 package ch.randelshofer.math;
 
+import java.lang.Math;
 import java.math.BigDecimal;
 
 /**
@@ -67,18 +68,7 @@ public class FastDoubleParser {
      * @return uint128 product of x and y
      */
     private static Value128 fullMultiplication(long x, long y) {
-        long x0 = x & 0xffffffffL, x1 = x >>> 32;
-        long y0 = y & 0xffffffffL, y1 = y >>> 32;
-        long p11 = x1 * y1, p01 = x0 * y1;
-        long p10 = x1 * y0, p00 = x0 * y0;
-
-        // 64-bit product + two 32-bit values
-        long middle = p10 + (p00 >>> 32) + (p01 & 0xffffffffL);
-        return new Value128(
-                // 64-bit product + two 32-bit values
-                p11 + (middle >>> 32) + (p01 >>> 32),
-                // Add LOW PART and lower half of MIDDLE PART
-                (middle << 32) | (p00 & 0xffffffffL));
+        return new Value128(Math.multiplyHigh(x, y), x*y);
     }
 
 
